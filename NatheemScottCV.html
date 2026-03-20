@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natheem Scott — Web Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0e0e0d;
+      --surface: #161614;
+      --surface2: #1e1e1b;
+      --border: rgba(255, 255, 255, 0.07);
+      --accent: #c8f060;
+      --accent2: #60d0f0;
+      --text: #e8e6df;
+      --muted: #888780;
+      --serif: 'DM Serif Display', serif;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Outfit', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.6;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 0 clamp(24px, 6vw, 80px);
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 0 40px;
+      max-width: 900px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+
+    .tag::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(56px, 9vw, 112px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.35s;
+    }
+
+    .hero-sub strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.5s;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0e0e0d;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: #d8ff70;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: var(--surface);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.65s;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .meta-value {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    /* ─── LAYOUT ─── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 6vw, 80px);
+    }
+
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .no-border {
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── PROJECTS ─── */
+    .projects-grid {
+      display: grid;
+      gap: 2px;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 36px;
+      transition: border-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .project-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .project-name {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .pill-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .pill-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .project-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      max-width: 640px;
+    }
+
+    .project-outcome {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 24px;
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      line-height: 1.6;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tech-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      background: var(--surface2);
+      color: var(--accent2);
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── EDUCATION ─── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2px;
+    }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: border-color 0.2s;
+    }
+
+    .edu-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .edu-degree {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .edu-school {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .edu-dates {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── SKILLS ─── */
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+    }
+
+    .skill-group-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 16px;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-chip {
+      font-size: 13px;
+      padding: 6px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--text);
+    }
+
+    /* ─── EXPERIENCE (compact) ─── */
+    .exp-list {
+      display: grid;
+      gap: 2px;
+    }
+
+    .exp-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 24px;
+      align-items: start;
+    }
+
+    .exp-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .exp-org {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .exp-dates {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      margin-top: 3px;
+    }
+
+    /* ─── CONTACT ─── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2px;
+    }
+
+    .contact-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .contact-item:hover {
+      border-color: var(--accent);
+    }
+
+    .contact-item:hover .contact-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .contact-value {
+      font-size: 14px;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .contact-arrow {
+      font-size: 18px;
+      color: var(--accent);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 40px clamp(24px, 6vw, 80px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .skills-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .exp-item {
+        grid-template-columns: 1fr;
+      }
+
+      .exp-dates {
+        margin-top: 0;
+      }
+
+      .hero-meta {
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── HERO ─── -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="tag">Web Developer — Cape Town, ZA</span>
+      <h1>Natheem<br><em>Scott</em></h1>
+      <p class="hero-sub">
+        Frontend-focused developer with <strong>3 shipped full-stack applications</strong> in React, TypeScript, and
+        Kotlin. Recently completed a BSc in Application Development — graduating April 2026.
+      </p>
+      <div class="hero-links">
+        <a href="mailto:natheemscott99@gmail.com" class="btn btn-primary">natheemscott99@gmail.com</a>
+        <a href="https://github.com/Natheem-ScottST10109685" target="_blank" rel="noopener" class="btn btn-ghost">GitHub
+          ↗</a>
+        <a href="https://www.linkedin.com/in/natheem-scott-555a91183/" target="_blank" rel="noopener"
+          class="btn btn-ghost">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Primary Focus</span>
+        <span class="meta-value">Frontend / UI</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Core Stack</span>
+        <span class="meta-value">React · TypeScript · Tailwind</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Also builds</span>
+        <span class="meta-value">Android · C# · REST APIs</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Available</span>
+        <span class="meta-value">Jan 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── PROJECTS ─── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Projects</h2>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- Malaika House -->
+        <div class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-name">Malaika House Platform</h3>
+            <div class="project-links">
+              <a href="https://github.com" target="_blank" rel="noopener" class="pill-link">GitHub ↗</a>
+            </div>
+          </div>
+          <p class="project-outcome">
+            Full-stack web platform supporting a real Cape Town NGO for neurodivergent learners — serving 4
+            authenticated user roles (Admin, Parent, Staff, Partner) with live data and intake workflows.
+          </p>
+          <p class="project-desc">
+            Built a modern, responsive frontend using React, Tailwind CSS, and Vite with modular architecture.
+            Implemented public-facing pages alongside authenticated dashboards. Integrated secure backend APIs with
+            Express, TypeScript, Prisma, and SQL Server. Applied role-based access control across the entire platform.
+          </p>
+          <div class="project-stack">
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">Tailwind CSS</span>
+            <span class="tech-tag">Vite</span>
+            <span class="tech-tag">Express</span>
+            <span class="tech-tag">Prisma</span>
+            <span class="tech-tag">SQL Server</span>
+          </div>
+        </div>
+
+        <!-- RSCSSA -->
+        <div class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-name">RSCSSA Sports Manager</h3>
+            <div class="project-links">
+              <a href="https://github.com" target="_blank" rel="noopener" class="pill-link">GitHub ↗</a>
+            </div>
+          </div>
+          <p class="project-outcome">
+            Android application managing sports franchises, player statistics, and live league data — with offline
+            caching, biometric login, and real-time Firebase sync.
+          </p>
+          <p class="project-desc">
+            Built a Material Design 3 UI focused on accessibility and consistency. Implemented secure authentication via
+            Firebase including Google Sign-In and biometric login. Integrated Firestore for real-time sync and RoomDB
+            for offline caching. Features include franchise management, player stats, standings, leaderboards, and
+            head-to-head comparisons.
+          </p>
+          <div class="project-stack">
+            <span class="tech-tag">Kotlin</span>
+            <span class="tech-tag">Firebase</span>
+            <span class="tech-tag">Firestore</span>
+            <span class="tech-tag">RoomDB</span>
+            <span class="tech-tag">Material Design 3</span>
+          </div>
+        </div>
+
+        <!-- Service Request -->
+        <div class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-name">Service Request & Event System</h3>
+            <div class="project-links">
+              <a href="https://github.com" target="_blank" rel="noopener" class="pill-link">GitHub ↗</a>
+            </div>
+          </div>
+          <p class="project-outcome">
+            Windows desktop application demonstrating advanced data structures — AVL Tree, Red-Black Tree, Binary Search
+            Tree, Min-Heap, and graph-based service tracking — applied to real civic workflows.
+          </p>
+          <p class="project-desc">
+            Designed and built a WinForms application for issue reporting, local event management, and service request
+            tracking. Implemented algorithmic approaches to optimize data organization and retrieval, with a sample data
+            loader to demonstrate system functionality.
+          </p>
+          <div class="project-stack">
+            <span class="tech-tag">C#</span>
+            <span class="tech-tag">Windows Forms</span>
+            <span class="tech-tag">Data Structures</span>
+            <span class="tech-tag">Algorithms</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EDUCATION ─── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Education</h2>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-card reveal">
+          <div class="edu-degree">BSc Application Development</div>
+          <div class="edu-school">IIE / Varsity College, Cape Town</div>
+          <div class="edu-dates">2022 — Dec 2025</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-degree">Certificate in Web Development</div>
+          <div class="edu-school">CodeSpace, Cape Town</div>
+          <div class="edu-dates">Feb 2019 — Jun 2019</div>
+        </div>
+        <div class="edu-card reveal">
+          <div class="edu-degree">Certificate in Microsoft IT</div>
+          <div class="edu-school">College of Cape Town</div>
+          <div class="edu-dates">Jan 2018 — Dec 2018</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SKILLS ─── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Skills</h2>
+      </div>
+      <div class="skills-layout">
+        <div class="skill-group reveal">
+          <div class="skill-group-title">Frontend</div>
+          <div class="skill-list">
+            <span class="skill-chip">React</span>
+            <span class="skill-chip">TypeScript</span>
+            <span class="skill-chip">JavaScript</span>
+            <span class="skill-chip">HTML</span>
+            <span class="skill-chip">CSS</span>
+            <span class="skill-chip">Tailwind CSS</span>
+            <span class="skill-chip">Vite</span>
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <div class="skill-group-title">Backend & Databases</div>
+          <div class="skill-list">
+            <span class="skill-chip">Express</span>
+            <span class="skill-chip">Prisma</span>
+            <span class="skill-chip">SQL Server</span>
+            <span class="skill-chip">MySQL</span>
+            <span class="skill-chip">SQLite</span>
+            <span class="skill-chip">MongoDB</span>
+            <span class="skill-chip">Firebase</span>
+            <span class="skill-chip">PHP</span>
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <div class="skill-group-title">Languages</div>
+          <div class="skill-list">
+            <span class="skill-chip">Kotlin</span>
+            <span class="skill-chip">C#</span>
+            <span class="skill-chip">Java</span>
+            <span class="skill-chip">ASP.Net</span>
+          </div>
+        </div>
+        <div class="skill-group reveal">
+          <div class="skill-group-title">Approach</div>
+          <div class="skill-list">
+            <span class="skill-chip">Agile</span>
+            <span class="skill-chip">Mobile Development</span>
+            <span class="skill-chip">Role-Based Auth</span>
+            <span class="skill-chip">REST APIs</span>
+            <span class="skill-chip">Git / GitHub</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EXPERIENCE ─── -->
+  <section>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Experience</h2>
+      </div>
+      <div class="exp-list">
+        <div class="exp-item reveal">
+          <div>
+            <div class="exp-title">Intern</div>
+            <div class="exp-org">Edubiz, Mitchell's Plain — requirements gathering and technical support</div>
+          </div>
+          <div class="exp-dates">2019 – 2019</div>
+        </div>
+        <div class="exp-item reveal">
+          <div>
+            <div class="exp-title">Part-Time Receptionist</div>
+            <div class="exp-org">Zone Fitness, Mitchell's Plain — front-desk, member queries, payment processing</div>
+          </div>
+          <div class="exp-dates">2019 – 2019</div>
+        </div>
+        <div class="exp-item reveal">
+          <div>
+            <div class="exp-title">Student Safety Ambassador</div>
+            <div class="exp-org">Mitchell's Plain Primary — safety awareness and staff support</div>
+          </div>
+          <div class="exp-dates">2021 – 2021</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ─── -->
+  <section class="no-border">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Get in touch</h2>
+      </div>
+      <div class="contact-grid">
+        <a href="mailto:natheemscott99@gmail.com" class="contact-item reveal">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">natheemscott99@gmail.com</span>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="tel:+27671224554" class="contact-item reveal">
+          <span class="contact-label">Phone</span>
+          <span class="contact-value">+27 67 122 4554</span>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener" class="contact-item reveal">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-value">https://www.linkedin.com/in/natheem-scott-555a91183/</span>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://github.com" target="_blank" rel="noopener" class="contact-item reveal">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">https://github.com/Natheem-ScottST10109685</span>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Natheem Scott — Cape Town, South Africa</span>
+    <span>Available from Jan 2026</span>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+
+</html>
